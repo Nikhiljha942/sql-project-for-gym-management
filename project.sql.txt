@@ -1,0 +1,116 @@
+-- Step 1: Create Database 
+CREATE DATABASE GymManagement;
+USE GymManagement;
+
+-- Step 2: Create Tables
+
+-- 1. Memberships Table
+CREATE TABLE Memberships (
+    MembershipID INT PRIMARY KEY AUTO_INCREMENT,
+    Type VARCHAR(30) NOT NULL, -- e.g., Basic, Premium, etc.
+    DurationMonths INT NOT NULL, -- Membership duration in months
+    Price DECIMAL(10, 2) NOT NULL,
+    Features TEXT -- Description of membership benefits
+);
+
+-- 2. Members Table
+CREATE TABLE Members (
+    MemberID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    DOB DATE,
+    Gender ENUM('Male', 'Female', 'Other'),
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(50),
+    JoinDate DATE, -- Date will be entered manually
+    MembershipID INT,
+    FOREIGN KEY (MembershipID) REFERENCES Memberships(MembershipID)
+);
+
+-- 3. Trainers Table
+CREATE TABLE Trainers (
+    TrainerID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Specialty VARCHAR(50),
+    ExperienceYears INT,
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(50)
+);
+
+-- 4. Workouts Table
+CREATE TABLE Workouts (
+    WorkoutID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(50) NOT NULL,
+    Description TEXT,
+    DurationMinutes INT,
+    DifficultyLevel ENUM('Beginner', 'Intermediate', 'Advanced')
+);
+
+-- 5. WorkoutSessions Table
+CREATE TABLE WorkoutSessions (
+    SessionID INT PRIMARY KEY AUTO_INCREMENT,
+    MemberID INT,
+    WorkoutID INT,
+    TrainerID INT,
+    SessionDate DATE, -- Date will be entered manually
+    DurationMinutes INT,
+    CaloriesBurned INT,
+    FOREIGN KEY (MemberID) REFERENCES Members(MemberID),
+    FOREIGN KEY (WorkoutID) REFERENCES Workouts(WorkoutID),
+    FOREIGN KEY (TrainerID) REFERENCES Trainers(TrainerID)
+);
+
+-- 6. Billing Table
+CREATE TABLE Billing (
+    BillID INT PRIMARY KEY AUTO_INCREMENT,
+    MemberID INT,
+    Amount DECIMAL(10, 2) NOT NULL,
+    PaymentDate DATE, -- Date will be entered manually
+    PaymentMethod ENUM('Cash', 'Card', 'Online') NOT NULL,
+    FOREIGN KEY (MemberID) REFERENCES Members(MemberID)
+);
+-- Inserting data into Memberships table
+INSERT INTO Memberships (Type, DurationMonths, Price, Features) VALUES 
+('Basic', 1, 500.00, 'Access to gym equipment only'),
+('Premium', 6, 3000.00, 'Access to gym equipment, personal trainer, and group classes'),
+('Gold', 12, 5500.00, 'All access to facilities, personal trainer, group classes, and spa services');
+
+-- Inserting data into Members table
+INSERT INTO Members (FirstName, LastName, DOB, Gender, PhoneNumber, Email, JoinDate, MembershipID) VALUES
+('Ravi', 'Kumar', '1990-05-15', 'Male', '9876543210', 'ravi.kumar@gmail.com', '2023-01-10', 1),
+('Priya', 'Sharma', '1995-09-25', 'Female', '9123456789', 'priya.sharma@gmail.com', '2023-05-20', 2),
+('Anil', 'Singh', '1988-12-05', 'Male', '9012345678', 'anil.singh@gmail.com', '2023-08-30', 3),
+('Asha', 'Verma', '1992-04-18', 'Female', '9087654321', 'asha.verma@gmail.com', '2023-10-15', 2);
+
+-- Inserting data into Trainers table
+INSERT INTO Trainers (FirstName, LastName, Specialty, ExperienceYears, PhoneNumber, Email) VALUES
+('Rajesh', 'Patel', 'Strength Training', 5, '9101234567', 'rajesh.patel@gmail.com'),
+('Meena', 'Chauhan', 'Yoga', 8, '9198765432', 'meena.chauhan@gmail.com'),
+('Sunil', 'Malhotra', 'Cardio', 4, '9290123456', 'sunil.malhotra@gmail.com');
+
+-- Inserting data into Workouts table
+INSERT INTO Workouts (Name, Description, DurationMinutes, DifficultyLevel) VALUES
+('Full Body Workout', 'A full body workout targeting major muscle groups', 60, 'Intermediate'),
+('Yoga Session', 'A calming yoga session to improve flexibility and relaxation', 45, 'Beginner'),
+('HIIT', 'High-intensity interval training for fast calorie burn', 30, 'Advanced');
+
+-- Inserting data into WorkoutSessions table
+INSERT INTO WorkoutSessions (MemberID, WorkoutID, TrainerID, SessionDate, DurationMinutes, CaloriesBurned) VALUES
+(1, 1, 1, '2023-02-05', 60, 500),
+(2, 2, 2, '2023-06-10', 45, 250),
+(3, 3, 3, '2023-09-15', 30, 400),
+(4, 1, 1, '2023-10-20', 60, 520);
+
+-- Inserting data into Billing table
+INSERT INTO Billing (MemberID, Amount, PaymentDate, PaymentMethod) VALUES
+(1, 500.00, '2023-01-10', 'Cash'),
+(2, 3000.00, '2023-05-20', 'Card'),
+(3, 5500.00, '2023-08-30', 'Online'),
+(4, 3000.00, '2023-10-15', 'Card');
+
+select * from Members;
+
+
+
+
